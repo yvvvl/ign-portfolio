@@ -1,0 +1,123 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card-elevated: var(--card-elevated);
+  --color-card-border: var(--card-border);
+
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+}
+
+:root {
+  --radius: 1rem;
+  /* Warm Coffee — Light */
+  --background: oklch(0.972 0.012 80);          /* #FAF8F5 */
+  --foreground: oklch(0.255 0.030 45);          /* #3D2B1F espresso */
+  --card: oklch(0.955 0.010 70);                /* #F4EFEA beige */
+  --card-foreground: oklch(0.255 0.030 45);
+  --card-elevated: oklch(0.955 0.010 70);
+  --card-border: oklch(0.88 0.018 60);
+  --popover: oklch(0.972 0.012 80);
+  --popover-foreground: oklch(0.255 0.030 45);
+  --primary: oklch(0.555 0.045 45);             /* latte */
+  --primary-foreground: oklch(0.97 0.018 80);
+  --secondary: oklch(0.945 0.012 70);
+  --secondary-foreground: oklch(0.255 0.030 45);
+  --muted: oklch(0.92 0.015 65);
+  --muted-foreground: oklch(0.42 0.035 40);
+  --accent: oklch(0.555 0.045 45);
+  --accent-foreground: oklch(0.97 0.018 80);
+  --destructive: oklch(0.55 0.20 25);
+  --border: oklch(0.88 0.018 60);
+  --input: oklch(0.88 0.018 60);
+  --ring: oklch(0.555 0.045 45);
+}
+
+.dark {
+  /* Midnight Espresso — Dark Cocoa */
+  --background: oklch(0.16 0.015 45);            /* #1A120B deep cocoa */
+  --foreground: oklch(0.92 0.025 80);            /* #EAE3D2 ivory */
+  --card: oklch(0.215 0.022 45);                 /* #261A12 translucent container */
+  --card-foreground: oklch(0.92 0.025 80);
+  --card-elevated: oklch(0.245 0.025 45);
+  --card-border: oklch(0.32 0.025 45);
+  --popover: oklch(0.18 0.018 45);
+  --popover-foreground: oklch(0.92 0.025 80);
+  --primary: oklch(0.70 0.060 55);               /* lighter latte for contrast */
+  --primary-foreground: oklch(0.16 0.015 45);
+  --secondary: oklch(0.245 0.025 45);
+  --secondary-foreground: oklch(0.92 0.025 80);
+  --muted: oklch(0.26 0.022 45);
+  --muted-foreground: oklch(0.72 0.025 70);
+  --accent: oklch(0.70 0.060 55);
+  --accent-foreground: oklch(0.16 0.015 45);
+  --destructive: oklch(0.60 0.20 25);
+  --border: oklch(0.32 0.025 45);
+  --input: oklch(0.30 0.025 45);
+  --ring: oklch(0.70 0.060 55);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility font-serif {
+  font-family: var(--font-serif);
+}
+@utility font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Glassmorphism utility for skill cards */
+@utility glass-card {
+  background: color-mix(in oklab, var(--color-card) 55%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--color-card-border) 70%, transparent);
+  box-shadow: inset 0 1px 0 0 color-mix(in oklab, white 12%, transparent);
+}
