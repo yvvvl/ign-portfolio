@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import {
   Code2, Globe, Network, Sparkles, Palette, Briefcase,
@@ -6,7 +7,7 @@ import { useI18n } from "@/lib/i18n";
 
 type Category = {
   key: "core" | "web" | "arch" | "data" | "uiux" | "other";
-  icon: React.ReactNode;
+  icon: ReactNode;
   items?: string[];
   descKey?: "uiuxDesc" | "otherDesc";
 };
@@ -83,7 +84,7 @@ export function Skills() {
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/20 to-transparent" />
               {/* perimeter glow on hover */}
               <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                   style={{ background: "radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--color-primary) 22%, transparent), transparent 60%)" }} />
+                style={{ background: "radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--color-primary) 22%, transparent), transparent 60%)" }} />
 
               <div className="relative">
                 <div className="flex items-center gap-3 mb-5">

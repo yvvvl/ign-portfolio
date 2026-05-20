@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, Github, Copy, Check, Send, Loader2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import type { FormEvent } from "react";
 
 export function Contact() {
   const { t } = useI18n();
@@ -14,7 +15,7 @@ export function Contact() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("loading");
     setTimeout(() => setStatus("sent"), 1200);

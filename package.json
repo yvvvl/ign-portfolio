@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "vite build && tsc --noEmit",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
-    "deploy": "vite build && wrangler deploy --config dist/tanstack_start_app/wrangler.json",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
