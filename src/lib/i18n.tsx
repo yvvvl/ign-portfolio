@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 export type Lang = "es" | "en";
 
@@ -6,7 +6,14 @@ type Dict = (typeof translations)["es"];
 
 export const translations = {
   es: {
-    nav: { home: "Inicio", about: "Sobre mí", skills: "Skills", projects: "Proyectos", contact: "Contacto", cta: "Hablemos" },
+    nav: {
+      home: "Inicio",
+      about: "Sobre mí",
+      skills: "Skills",
+      projects: "Proyectos",
+      contact: "Contacto",
+      cta: "Hablemos",
+    },
     hero: {
       role: "Estudiante de Ingeniería en Informática con mención en Ciencia de Datos · Desarrollador Full-Stack & Data Science",
       title: "Conectando software y datos con",
@@ -35,7 +42,8 @@ export const translations = {
         uiux: "UI/UX Design",
         other: "Otros",
       },
-      uiuxDesc: "Implementación de interfaces interactivas y estéticas personalizadas (Glassmorphism, texturas glossy).",
+      uiuxDesc:
+        "Implementación de interfaces interactivas y estéticas personalizadas (Glassmorphism, texturas glossy).",
       otherDesc: "Usuario avanzado de Microsoft Office.",
     },
     projects: {
@@ -45,10 +53,21 @@ export const translations = {
       demo: "Live Demo",
       code: "GitHub",
       items: [
-        { title: "Coffee House Brand", description: "Sitio corporativo para una cafetería boutique, enfocado en storytelling visual y conversión de reservas." },
-        { title: "Portfolio Arquitecto", description: "Galería editorial para un estudio de arquitectura con navegación inmersiva y carga progresiva de imágenes." },
-        { title: "Dashboard SaaS", description: "Panel analítico para una plataforma de gestión, priorizando claridad de datos y micro-interacciones." },
-        { title: "E-commerce Artesanal", description: "Tienda online para productos hechos a mano con checkout optimizado y catálogo dinámico." },
+        {
+          title: "About Brent",
+          description:
+            "Sitio web profesional para una marca personal, enfocado en presencia digital, diseño responsive y una experiencia visual clara para presentar servicios e identidad.",
+        },
+        {
+          title: "EDA Spotify Tracks",
+          description:
+            "Análisis exploratorio de datos musicales de Spotify para identificar patrones, variables relevantes y relaciones entre características de canciones.",
+        },
+        {
+          title: "Tech Job Market Chile",
+          description:
+            "Plataforma para analizar el mercado laboral tecnológico en Chile. La demo pública utiliza datos simulados; el repositorio incluye backend con FastAPI, PostgreSQL, Alembic, tests y CI automatizado.",
+        },
       ],
     },
     contact: {
@@ -72,7 +91,14 @@ export const translations = {
     footer: "Hecho con cuidado.",
   },
   en: {
-    nav: { home: "Home", about: "About", skills: "Skills", projects: "Projects", contact: "Contact", cta: "Let's talk" },
+    nav: {
+      home: "Home",
+      about: "About",
+      skills: "Skills",
+      projects: "Projects",
+      contact: "Contact",
+      cta: "Let's talk",
+    },
     hero: {
       role: "Software Engineering Student specializing in Data Science · Full-Stack & Data Science Developer",
       title: "Bridging software and data with",
@@ -101,7 +127,8 @@ export const translations = {
         uiux: "UI/UX Design",
         other: "Other",
       },
-      uiuxDesc: "Implementation of interactive interfaces and custom aesthetics (Glassmorphism, glossy textures).",
+      uiuxDesc:
+        "Implementation of interactive interfaces and custom aesthetics (Glassmorphism, glossy textures).",
       otherDesc: "Advanced Microsoft Office user.",
     },
     projects: {
@@ -111,10 +138,21 @@ export const translations = {
       demo: "Live Demo",
       code: "GitHub",
       items: [
-        { title: "Coffee House Brand", description: "Corporate site for a boutique coffee shop, focused on visual storytelling and reservation conversion." },
-        { title: "Architect Portfolio", description: "Editorial gallery for an architecture studio with immersive navigation and progressive image loading." },
-        { title: "SaaS Dashboard", description: "Analytics panel for a management platform, prioritizing data clarity and micro-interactions." },
-        { title: "Handcrafted E-commerce", description: "Online store for handmade products with optimized checkout and dynamic catalog." },
+        {
+          title: "About Brent",
+          description:
+            "Professional website for a personal brand, focused on digital presence, responsive design and a clear visual experience for presenting services and identity.",
+        },
+        {
+          title: "EDA Spotify Tracks",
+          description:
+            "Exploratory data analysis of Spotify music tracks to identify patterns, relevant variables and relationships between song features.",
+        },
+        {
+          title: "Tech Job Market Chile",
+          description:
+            "Platform for analyzing Chile's tech job market. The public demo uses sample data; the repository includes a FastAPI and PostgreSQL backend, Alembic migrations, tests and automated CI.",
+        },
       ],
     },
     contact: {
@@ -139,25 +177,52 @@ export const translations = {
   },
 } as const;
 
-type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: Dict };
+type Ctx = {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: Dict;
+};
+
 const LangCtx = createContext<Ctx | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("es");
+
   useEffect(() => {
-    const saved = (typeof window !== "undefined" && localStorage.getItem("lang")) as Lang | null;
-    if (saved === "es" || saved === "en") setLangState(saved);
+    const saved = (
+      typeof window !== "undefined" ? localStorage.getItem("lang") : null
+    ) as Lang | null;
+
+    if (saved === "es" || saved === "en") {
+      setLangState(saved);
+    }
   }, []);
+
   const setLang = (l: Lang) => {
     setLangState(l);
-    if (typeof window !== "undefined") localStorage.setItem("lang", l);
-    if (typeof document !== "undefined") document.documentElement.lang = l;
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("lang", l);
+    }
+
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = l;
+    }
   };
-  return <LangCtx.Provider value={{ lang, setLang, t: translations[lang] as Dict }}>{children}</LangCtx.Provider>;
+
+  return (
+    <LangCtx.Provider value={{ lang, setLang, t: translations[lang] as Dict }}>
+      {children}
+    </LangCtx.Provider>
+  );
 }
 
 export function useI18n() {
   const ctx = useContext(LangCtx);
-  if (!ctx) throw new Error("useI18n must be used within LanguageProvider");
+
+  if (!ctx) {
+    throw new Error("useI18n must be used within LanguageProvider");
+  }
+
   return ctx;
 }
