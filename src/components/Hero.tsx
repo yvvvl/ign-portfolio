@@ -1,40 +1,56 @@
 import { motion } from "framer-motion";
 import { ArrowDown, Download } from "lucide-react";
+
 import { useI18n } from "@/lib/i18n";
 
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
 };
+
 const item = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+  },
 };
 
-export function Hero() {
+export function Hero({ onProjectsClick }: { onProjectsClick?: () => void }) {
   const { t, lang } = useI18n();
+
   return (
-    <section id="inicio" className="relative pt-36 pb-28 md:pt-48 md:pb-40 px-6 md:px-10 overflow-hidden">
-      <div className="absolute inset-0 -z-10 opacity-60 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-primary/10 blur-3xl" />
+    <section
+      id="inicio"
+      className="relative overflow-hidden px-6 pb-24 pt-24 md:px-10 md:pb-32 md:pt-36"
+    >
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-70">
+        <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-accent/10 blur-3xl" />
       </div>
+
       <DataFlowGraphic />
+
       <motion.div
         key={lang}
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative max-w-4xl mx-auto text-center"
+        className="relative mx-auto max-w-4xl text-center"
       >
-        <motion.p variants={item} className="font-mono text-[0.7rem] md:text-xs tracking-[0.25em] text-primary mb-6 uppercase">
+        <motion.p
+          variants={item}
+          className="mb-6 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-primary md:text-xs"
+        >
           — {t.hero.role}
         </motion.p>
+
         <motion.h1
           variants={item}
-          className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] leading-[1.05] text-foreground"
+          className="font-serif text-5xl leading-[1.05] text-foreground sm:text-6xl md:text-7xl lg:text-[5.5rem]"
         >
-          {t.hero.title}{" "}
-          <em className="italic text-primary font-normal">{t.hero.titleEm}</em>.
+          {t.hero.title} <em className="font-normal italic text-primary">{t.hero.titleEm}</em>.
         </motion.h1>
 
         <motion.div
@@ -44,38 +60,44 @@ export function Hero() {
           {t.hero.tags.map((tag, i) => (
             <span
               key={tag}
-              className="group relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-foreground/15 bg-card/60 backdrop-blur-sm text-[0.7rem] md:text-xs font-mono tracking-wider text-foreground/80 hover:border-primary/60 hover:text-primary transition-all duration-300"
+              className="group relative inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-card/60 px-3.5 py-1.5 font-mono text-[0.7rem] tracking-wider text-foreground/80 backdrop-blur-sm transition-all duration-300 hover:border-primary/60 hover:text-primary md:text-xs"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-primary/70 group-hover:bg-primary transition-colors" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary/70 transition-colors group-hover:bg-primary" />
               {tag}
-              {i < t.hero.tags.length - 1 && (
-                <span className="absolute -right-2.5 sm:-right-3.5 top-1/2 -translate-y-1/2 text-foreground/20 select-none hidden sm:inline">
+              {i < t.hero.tags.length - 1 ? (
+                <span className="absolute -right-2.5 top-1/2 hidden -translate-y-1/2 select-none text-foreground/20 sm:-right-3.5 sm:inline">
                   /
                 </span>
-              )}
+              ) : null}
             </span>
           ))}
         </motion.div>
 
         <motion.p
           variants={item}
-          className="mt-8 text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+          className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg"
         >
           {t.hero.subtitle}
         </motion.p>
-        <motion.div variants={item} className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="#proyectos"
-            className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300"
+
+        <motion.div
+          variants={item}
+          className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
+          <button
+            type="button"
+            onClick={onProjectsClick}
+            className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/20"
           >
             {t.hero.ctaProjects}
-            <ArrowDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
-          </a>
+            <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+          </button>
+
           <a
             href="#"
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-foreground/20 text-sm text-foreground hover:border-primary hover:text-primary transition-all duration-300"
+            className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-7 py-3.5 text-sm text-foreground transition-all duration-300 hover:border-primary hover:text-primary"
           >
-            <Download className="w-4 h-4" />
+            <Download className="h-4 w-4" />
             {t.hero.ctaCv}
           </a>
         </motion.div>
@@ -85,7 +107,6 @@ export function Hero() {
 }
 
 function DataFlowGraphic() {
-  // Abstract data-flow / node network in coffee tones.
   const nodes = [
     { cx: 80, cy: 120, r: 3 },
     { cx: 180, cy: 70, r: 2.5 },
@@ -96,17 +117,28 @@ function DataFlowGraphic() {
     { cx: 340, cy: 240, r: 2.5 },
     { cx: 420, cy: 180, r: 3 },
   ];
+
   const lines = [
-    [0, 1], [1, 2], [2, 3], [0, 4], [4, 5], [5, 2], [5, 6], [6, 7], [3, 7], [2, 6],
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [0, 4],
+    [4, 5],
+    [5, 2],
+    [5, 6],
+    [6, 7],
+    [3, 7],
+    [2, 6],
   ];
+
   return (
     <div
       aria-hidden
-      className="absolute inset-0 -z-10 pointer-events-none flex items-center justify-center opacity-[0.35] dark:opacity-25"
+      className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-[0.35] dark:opacity-25"
     >
       <svg
         viewBox="0 0 480 320"
-        className="w-[120%] max-w-[1100px] h-auto text-primary"
+        className="h-auto w-[120%] max-w-[1100px] text-primary"
         fill="none"
       >
         <defs>
@@ -115,6 +147,7 @@ function DataFlowGraphic() {
             <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
           </radialGradient>
         </defs>
+
         {lines.map(([a, b], i) => (
           <motion.line
             key={i}
@@ -127,9 +160,14 @@ function DataFlowGraphic() {
             strokeOpacity="0.5"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 0.5 }}
-            transition={{ duration: 1.4, delay: 0.4 + i * 0.08, ease: "easeOut" }}
+            transition={{
+              duration: 1.4,
+              delay: 0.4 + i * 0.08,
+              ease: "easeOut",
+            }}
           />
         ))}
+
         {nodes.map((n, i) => (
           <g key={i}>
             <circle cx={n.cx} cy={n.cy} r={n.r * 4} fill="url(#nodeGlow)" opacity="0.35" />
@@ -145,6 +183,7 @@ function DataFlowGraphic() {
             />
           </g>
         ))}
+
         {lines.slice(0, 5).map(([a, b], i) => (
           <motion.circle
             key={`p-${i}`}
