@@ -10,19 +10,19 @@ const meta = [
   {
     stack: ["React", "Vite", "Tailwind", "Vercel"],
     demo: "https://aboutbrent.vercel.app/",
-    github: "",
+    github: "https://github.com/yvvvl/brentfaiyaz-chronicles",
     image: aboutBrentImage,
     gradient: "from-[#8D6E63] via-[#A88578] to-[#E6DCD3]",
   },
   {
     stack: ["Python", "Pandas", "EDA", "Spotify"],
     demo: "https://eda-spotify-tracks.vercel.app/",
-    github: "",
+    github: "https://github.com/yvvvl/eda-spotify-tracks",
     image: edaSpotifyImage,
     gradient: "from-[#1DB954] via-[#191414] to-[#535353]",
   },
   {
-    stack: ["FastAPI", "PostgreSQL", "React", "TypeScript", "GitHub Actions"],
+    stack: ["FastAPI", "PostgreSQL", "React", "TypeScript", "CI/CD"],
     demo: "https://tech-job-market-chile-demo.silva-ignacio-696.workers.dev/",
     github: "https://github.com/yvvvl/tech-job-market-chile",
     image: techJobMarketImage,

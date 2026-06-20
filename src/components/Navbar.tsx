@@ -1,63 +1,94 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun, Languages } from "lucide-react";
-import { useTheme } from "@/lib/theme";
-import { useI18n } from "@/lib/i18n";
+import { AnimatePresence, motion } from "framer-motion";
+import { Languages, Moon, Sun } from "lucide-react";
 
-export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+import { useI18n } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
+
+export type PortfolioView = "home" | "about" | "skills" | "projects" | "case" | "contact";
+
+type NavbarProps = {
+  activeView: PortfolioView;
+  onViewChange: (view: PortfolioView) => void;
+};
+
+export function Navbar({ activeView, onViewChange }: NavbarProps) {
   const { theme, toggle } = useTheme();
   const { lang, setLang, t } = useI18n();
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const links = [
-    { href: "#inicio", label: t.nav.home },
-    { href: "#sobre-mi", label: t.nav.about },
-    { href: "#skills", label: t.nav.skills },
-    { href: "#proyectos", label: t.nav.projects },
-    { href: "#contacto", label: t.nav.contact },
+  const links: { view: PortfolioView; label: string }[] = [
+    { view: "home", label: t.nav.home },
+    { view: "about", label: t.nav.about },
+    { view: "skills", label: t.nav.skills },
+    { view: "projects", label: t.nav.projects },
+    {
+      view: "case",
+      label: lang === "es" ? "Proyecto destacado" : "Case Study",
+    },
+    { view: "contact", label: t.nav.contact },
   ];
 
   return (
     <motion.header
-      initial={{ y: -40, opacity: 0 }}
+      initial={{ y: -32, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "backdrop-blur-md bg-background/80 border-b border-border/60" : "bg-transparent"
-      }`}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/86 backdrop-blur-xl"
     >
-      <nav className="max-w-6xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between gap-4">
-        <a href="#inicio" className="font-serif text-lg tracking-tight text-foreground">
-          Ignacio Silva<span className="text-primary">.</span>
-        </a>
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6 md:px-10">
+        <button
+          type="button"
+          onClick={() => onViewChange("home")}
+          className="group flex items-center gap-2 text-left"
+        >
+          <span className="grid h-8 w-8 place-items-center rounded-lg border border-primary/30 bg-primary/12 font-mono text-xs text-primary transition group-hover:border-primary">
+            IS
+          </span>
+          <span className="font-mono text-sm tracking-tight text-foreground">
+            Ignacio Silva<span className="text-primary">.</span>
+          </span>
+        </button>
 
-        <ul className="hidden md:flex items-center gap-7">
-          {links.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                className="relative text-sm text-muted-foreground hover:text-foreground transition-colors group py-1"
-              >
-                {l.label}
-                <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-              </a>
-            </li>
-          ))}
+        <ul className="hidden items-center gap-1 rounded-full border border-border/70 bg-card/70 p-1 md:flex">
+          {links.map((link) => {
+            const active = activeView === link.view;
+
+            return (
+              <li key={link.view}>
+                <button
+                  type="button"
+                  onClick={() => onViewChange(link.view)}
+                  className={`relative rounded-full px-3.5 py-1.5 text-xs transition-colors ${
+                    active
+                      ? "text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {active ? (
+                    <motion.span
+                      layoutId="active-nav-pill"
+                      className="absolute inset-0 rounded-full bg-primary"
+                      transition={{
+                        type: "spring",
+                        bounce: 0.18,
+                        duration: 0.45,
+                      }}
+                    />
+                  ) : null}
+                  <span className="relative">{link.label}</span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex items-center gap-2">
           <LangSwitch lang={lang} setLang={setLang} />
+
           <button
+            type="button"
             onClick={toggle}
             aria-label="Toggle theme"
-            className="relative w-9 h-9 inline-flex items-center justify-center rounded-full border border-foreground/15 text-foreground hover:border-primary hover:text-primary transition-all duration-300"
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-foreground/15 text-foreground transition-all duration-300 hover:border-primary hover:text-primary"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
@@ -68,43 +99,72 @@ export function Navbar() {
                 transition={{ duration: 0.25 }}
                 className="absolute inset-0 inline-flex items-center justify-center"
               >
-                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </motion.span>
             </AnimatePresence>
           </button>
-          <a
-            href="#contacto"
-            className="hidden sm:inline-flex items-center px-4 py-2 rounded-full border border-foreground/20 text-sm text-foreground hover:border-primary hover:text-primary transition-all duration-300"
+
+          <button
+            type="button"
+            onClick={() => onViewChange("contact")}
+            className="hidden items-center rounded-full border border-foreground/20 px-4 py-2 text-sm text-foreground transition-all duration-300 hover:border-primary hover:text-primary sm:inline-flex"
           >
             {t.nav.cta}
-          </a>
+          </button>
         </div>
       </nav>
+
+      <div className="border-t border-border/60 bg-background/88 px-4 py-2 md:hidden">
+        <div className="flex gap-2 overflow-x-auto">
+          {links.map((link) => {
+            const active = activeView === link.view;
+
+            return (
+              <button
+                key={link.view}
+                type="button"
+                onClick={() => onViewChange(link.view)}
+                className={`shrink-0 rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                  active
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-muted-foreground"
+                }`}
+              >
+                {link.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </motion.header>
   );
 }
 
 function LangSwitch({ lang, setLang }: { lang: "es" | "en"; setLang: (l: "es" | "en") => void }) {
   return (
-    <div className="relative inline-flex items-center rounded-full border border-foreground/15 p-0.5 text-xs font-mono">
-      <Languages className="w-3.5 h-3.5 mx-2 text-muted-foreground" />
+    <div className="relative inline-flex items-center rounded-full border border-foreground/15 p-0.5 font-mono text-xs">
+      <Languages className="mx-2 h-3.5 w-3.5 text-muted-foreground" />
+
       {(["es", "en"] as const).map((code) => {
         const active = lang === code;
+
         return (
           <button
             key={code}
+            type="button"
             onClick={() => setLang(code)}
-            className={`relative px-2.5 py-1 rounded-full uppercase tracking-widest transition-colors ${
+            className={`relative rounded-full px-2.5 py-1 uppercase tracking-widest transition-colors ${
               active ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {active && (
+            {active ? (
               <motion.span
                 layoutId="lang-pill"
-                className="absolute inset-0 bg-primary rounded-full"
+                className="absolute inset-0 rounded-full bg-primary"
                 transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
               />
-            )}
+            ) : null}
+
             <span className="relative">{code}</span>
           </button>
         );
